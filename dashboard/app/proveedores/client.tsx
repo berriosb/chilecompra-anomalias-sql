@@ -122,16 +122,16 @@ export function ProveedoresClient({ data }: { data: TopProveedor[] }) {
   );
 }
 
-function CustomTooltip({ active, payload }: any) {
+function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload?: Record<string, unknown> }> }) {
   if (!active || !payload?.[0]) return null;
-  const d = payload[0].payload;
+  const d = payload[0].payload as Record<string, any>;
   return (
     <div className="bg-ink text-paper px-4 py-3 rounded shadow-lg text-xs">
-      <p className="font-medium mb-1">{d.fullName?.split(" | ")[0]}</p>
-      <p className="tabular">${d.monto.toFixed(1)} mil M CLP</p>
-      <p className="text-paper/70">{d.oc.toLocaleString("es-CL")} OC</p>
-      <p className="text-paper/70">{d.compradores} compradores</p>
-      <p className="text-paper/70">{d.region}</p>
+      <p className="font-medium mb-1">{(d.fullName as string)?.split(" | ")[0]}</p>
+      <p className="tabular">${(d.monto as number).toFixed(1)} mil M CLP</p>
+      <p className="text-paper/70">{(d.oc as number).toLocaleString("es-CL")} OC</p>
+      <p className="text-paper/70">{d.compradores as number} compradores</p>
+      <p className="text-paper/70">{d.region as string}</p>
     </div>
   );
 }

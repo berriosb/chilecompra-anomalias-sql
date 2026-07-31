@@ -73,15 +73,15 @@ export function GeografiaClient({ data }: { data: GastoRegion[] }) {
                 axisLine={false}
               />
               <Tooltip
-                content={({ active, payload }: any) => {
+                content={({ active, payload }: { active?: boolean; payload?: Array<{ payload?: Record<string, unknown> }> }) => {
                   if (!active || !payload?.[0]) return null;
-                  const d = payload[0].payload;
+                  const d = payload[0].payload as Record<string, any>;
                   return (
                     <div className="bg-ink text-paper px-4 py-3 rounded shadow-lg text-xs">
-                      <p className="font-medium mb-1">{d.supplier_region}</p>
-                      <p className="tabular">${(d.monto_total / 1e9).toFixed(1)} mil M CLP</p>
+                      <p className="font-medium mb-1">{d.supplier_region as string}</p>
+                      <p className="tabular">${((d.monto_total as number) / 1e9).toFixed(1)} mil M CLP</p>
                       <p className="text-paper/70">
-                        {((d.monto_total / total) * 100).toFixed(1)}% del total
+                        {(((d.monto_total as number) / total) * 100).toFixed(1)}% del total
                       </p>
                     </div>
                   );

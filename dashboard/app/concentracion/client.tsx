@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
+import type React from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { HHIOrganismo } from "@/lib/queries";
@@ -117,20 +118,22 @@ export function ConcentracionClient({ data }: { data: HHIOrganismo[] }) {
               <Scatter
                 data={chartData}
                 fill="#c1502e"
-                shape={(props: any) => {
-                  const color = colorFor(props.payload.hhi);
+                shape={((props: unknown): React.ReactElement => {
+                  const p = (props ?? {}) as { cx?: number; cy?: number; payload?: Record<string, unknown> };
+                  const color = p.payload ? colorFor(p.payload.hhi as number) : "#c1502e";
+                  const monto = p.payload ? ((p.payload.monto as number) ?? 0) : 0;
                   return (
                     <circle
-                      cx={props.cx}
-                      cy={props.cy}
-                      r={Math.sqrt(props.payload.monto) * 1.5 + 4}
+                      cx={p.cx}
+                      cy={p.cy}
+                      r={Math.sqrt(monto) * 1.5 + 4}
                       fill={color}
                       fillOpacity={0.78}
                       stroke="#1a1a1a"
                       strokeWidth={0.8}
                     />
                   );
-                }}
+                }) as unknown as (props: unknown) => React.ReactElement}
               />
             </ScatterChart>
           </ResponsiveContainer>
@@ -183,21 +186,21 @@ export function ConcentracionClient({ data }: { data: HHIOrganismo[] }) {
   );
 }
 
-function CustomTooltip({ active, payload }: any) {
+function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload?: Record<string, unknown> }> }) {
   if (!active || !payload?.[0]) return null;
-  const d = payload[0].payload;
+  const d = payload[0].payload as Record<string, any>;
   const level = hhiLevel(Number(d.hhi));
   return (
     <div className="bg-ink text-paper px-4 py-3 rounded shadow-lg text-xs max-w-xs">
-      <p className="font-medium mb-2">{d.buyer_name?.split(" | ")[0]}</p>
+      <p className="font-medium mb-2">{(d.buyer_name as string)?.split(" | ")[0]}</p>
       <p className="tabular">
         <span className="text-paper/70">HHI:</span> {Number(d.hhi).toFixed(1)}
       </p>
       <p className="tabular">
-        <span className="text-paper/70">Gasto:</span> ${d.monto.toFixed(1)} mil M
+        <span className="text-paper/70">Gasto:</span> ${(d.monto as number).toFixed(1)} mil M
       </p>
       <p className="tabular">
-        <span className="text-paper/70">Proveedores:</span> {d.num_proveedores}
+        <span className="text-paper/70">Proveedores:</span> {d.num_proveedores as number}
       </p>
       <p className={`mt-2 font-medium ${level.color.replace("text-", "text-")}`}>
         {level.label}
