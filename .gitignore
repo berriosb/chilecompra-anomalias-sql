@@ -46,3 +46,4 @@ dashboard/.next/
 *.log
 .vercel
 dashboard/tsconfig.tsbuildinfo
+.env*
