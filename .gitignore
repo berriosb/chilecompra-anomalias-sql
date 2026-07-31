@@ -1,0 +1,39 @@
+# Environment
+.env
+.env.local
+
+# Data — no se commitea por tamaño, solo sample
+data/raw/
+data/processed/
+data/temp/
+data/*.csv
+data/*.parquet
+data/*.tar.gz
+data/*.db
+
+# Excepción: el sample_oc.csv SÍ se commitea
+!data/sample_oc.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
