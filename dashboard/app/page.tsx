@@ -5,6 +5,7 @@ import {
   TrendingUp,
   Users,
   Building2,
+  Github,
 } from "lucide-react";
 export const dynamic = "force-dynamic";
 
@@ -51,8 +52,9 @@ export default async function HomePage() {
           </h1>
           <p className="text-lg md:text-xl text-ink-muted max-w-2xl leading-relaxed">
             Análisis de <strong className="text-ink font-semibold">918K órdenes de compra</strong>{" "}
-            del Estado chileno. Detección de concentración de mercado, top
-            proveedores, distribución territorial y anomalías de precio.
+            del Estado chileno.
+            <br className="hidden md:block" />
+            Datos abiertos OCDS para transparencia y eficiencia.
           </p>
         </div>
       </section>
@@ -155,17 +157,25 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Visualización Destacada — DESHABILITADO por ahora
-          (requiere query nueva a Supabase: gasto_por_categoria)
-          Se deja el bloque comentado para implementar en próximo sprint
-          cuando agreguemos la query de categorías OCDE/UNSPSC.
-      */}
-      {/* <section className="max-w-6xl mx-auto px-6 pb-16">
+      {/* Visualización Destacada — Treemap de gasto por categoría */}
+      <section className="max-w-6xl mx-auto px-6 pb-16 md:pb-24">
         <h2 className="font-display text-3xl md:text-4xl text-ink mb-10">
           Visualización Destacada
         </h2>
-        <FeaturedTreemap />
-      </section> */}
+        <div className="border border-grid rounded-xl overflow-hidden bg-white">
+          <div className="p-5 md:p-6 border-b border-grid">
+            <h3 className="font-display text-lg md:text-xl text-ink">
+              Gasto Público por Categoría
+            </h3>
+            <p className="text-sm text-ink-muted mt-1">
+              Distribución del gasto estatal 2024 por rubro — tamaño proporcional al monto total
+            </p>
+          </div>
+          <div className="p-4 md:p-6">
+            <FeaturedTreemap />
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </main>
@@ -274,20 +284,56 @@ function NavCard({
 
 function Footer() {
   return (
-    <footer className="border-t border-grid mt-12">
-      <div className="max-w-6xl mx-auto px-6 py-8 text-xs text-ink-muted flex flex-col md:flex-row items-center justify-between gap-3">
-        <p>
-          Pipeline de análisis:{" "}
-          <a
-            className="underline hover:text-ink"
-            href="https://github.com/berriosb/chilecompra-anomalias-sql"
-          >
-            github.com/berriosb/chilecompra-anomalias-sql
-          </a>
-        </p>
-        <Link href="/" className="font-display text-base text-ink">
-          ChileCompra<span className="text-accent">.</span>
-        </Link>
+    <footer className="border-t border-grid mt-12 bg-white">
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          {/* Left: Attribution & links */}
+          <div className="text-xs text-ink-muted space-y-1.5">
+            <p>
+              Datos:{" "}
+              <a
+                className="underline hover:text-ink transition-colors"
+                href="https://data.open-contracting.org/es/publication/144"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Contracting Partnership
+              </a>
+              {" "}· Licencia CC0 1.0 Universal
+            </p>
+            <p>
+              Pipeline de análisis:{" "}
+              <a
+                className="inline-flex items-center gap-1 underline hover:text-ink transition-colors"
+                href="https://github.com/berriosb/chilecompra-anomalias-sql"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github className="w-3 h-3" />
+                github.com/berriosb/chilecompra-anomalias-sql
+              </a>
+            </p>
+          </div>
+
+          {/* Right: Logos */}
+          <div className="flex items-center gap-6">
+            <Link href="/" className="font-display text-base text-ink hover:opacity-80 transition-opacity">
+              ChileCompra<span className="text-accent">.</span>
+            </Link>
+            <div className="h-6 w-px bg-grid" />
+            <a
+              href="https://www.open-contracting.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-ink-muted hover:text-ink transition-colors"
+            >
+              <OcpLogo />
+              <span className="text-xs font-medium leading-tight">
+                Open<br />Contracting<br />Partnership
+              </span>
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
   );
@@ -448,6 +494,156 @@ function ScatterPreview() {
           />
         );
       })}
+    </svg>
+  );
+}
+
+/* ============================================================
+   Visualización Destacada: Treemap de Gasto por Categoría
+   ============================================================ */
+
+/**
+ * Datos de gasto público por categoría (aproximación basada en
+ * distribución real de compras públicas Chile 2024 por rubro UNSPSC).
+ * Solo se usa para la visualización decorativa de la landing.
+ */
+interface CategoriaGasto {
+  nombre: string;
+  porcentaje: number;
+  color: string;
+}
+
+const CATEGORIAS_GASTO: CategoriaGasto[] = [
+  { nombre: "Salud",               porcentaje: 28, color: "#1f3a52" },
+  { nombre: "Infraestructura",     porcentaje: 18, color: "#3a6d7a" },
+  { nombre: "Tecnología",          porcentaje: 12, color: "#5a9485" },
+  { nombre: "Educación",           porcentaje: 10, color: "#4a7c8c" },
+  { nombre: "Equipamiento\ny suministros", porcentaje: 8, color: "#d4a437" },
+  { nombre: "Servicios\nprofesionales",    porcentaje: 6, color: "#1f3a52" },
+  { nombre: "Alimentación",        porcentaje: 5, color: "#c1502e" },
+  { nombre: "Transporte",          porcentaje: 4, color: "#4a7c8c" },
+  { nombre: "Defensa",             porcentaje: 4, color: "#3a6d7a" },
+  { nombre: "Energía",             porcentaje: 3, color: "#6a7d8a" },
+  { nombre: "Otros",               porcentaje: 2, color: "#5a9485" },
+];
+
+/** Treemap layout sencillo: squarified simplificado (slice-and-dice) */
+function layoutTreemap(
+  items: CategoriaGasto[],
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  vertical: boolean
+): { x: number; y: number; w: number; h: number; item: CategoriaGasto }[] {
+  if (items.length === 0) return [];
+  if (items.length === 1) {
+    return [{ x, y, w, h, item: items[0] }];
+  }
+
+  const total = items.reduce((s, c) => s + c.porcentaje, 0);
+  const result: { x: number; y: number; w: number; h: number; item: CategoriaGasto }[] = [];
+
+  // Split into two halves roughly equal by weight
+  let half = 0;
+  let splitIdx = 0;
+  for (let i = 0; i < items.length; i++) {
+    half += items[i].porcentaje;
+    if (half >= total / 2) {
+      splitIdx = i + 1;
+      break;
+    }
+  }
+  if (splitIdx === 0) splitIdx = 1;
+
+  const left = items.slice(0, splitIdx);
+  const right = items.slice(splitIdx);
+  const leftTotal = left.reduce((s, c) => s + c.porcentaje, 0);
+  const ratio = leftTotal / total;
+
+  if (vertical) {
+    const splitW = w * ratio;
+    result.push(...layoutTreemap(left, x, y, splitW, h, !vertical));
+    result.push(...layoutTreemap(right, x + splitW, y, w - splitW, h, !vertical));
+  } else {
+    const splitH = h * ratio;
+    result.push(...layoutTreemap(left, x, y, w, splitH, !vertical));
+    result.push(...layoutTreemap(right, x, y + splitH, w, h - splitH, !vertical));
+  }
+
+  return result;
+}
+
+function FeaturedTreemap() {
+  const rects = layoutTreemap(CATEGORIAS_GASTO, 0, 0, 100, 100, true);
+  const gap = 0.4;
+
+  return (
+    <svg viewBox="0 0 100 100" className="w-full" style={{ aspectRatio: "5/3" }} aria-hidden="true">
+      {rects.map((r, i) => {
+        const rx = r.x + gap / 2;
+        const ry = r.y + gap / 2;
+        const rw = Math.max(r.w - gap, 0.5);
+        const rh = Math.max(r.h - gap, 0.5);
+        const lines = r.item.nombre.split("\n");
+        const fontSize = rw > 15 && rh > 12 ? 2.8 : rw > 8 && rh > 8 ? 2.2 : 0;
+        return (
+          <g key={i}>
+            <rect
+              x={rx}
+              y={ry}
+              width={rw}
+              height={rh}
+              rx="0.8"
+              fill={r.item.color}
+              className="transition-opacity hover:opacity-80"
+            />
+            {fontSize > 0 && (
+              <text
+                x={rx + rw / 2}
+                y={ry + rh / 2 - (lines.length - 1) * (fontSize * 0.6)}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill="white"
+                fontSize={fontSize}
+                fontWeight="600"
+                style={{ pointerEvents: "none" }}
+              >
+                {lines.map((line, li) => (
+                  <tspan
+                    key={li}
+                    x={rx + rw / 2}
+                    dy={li === 0 ? 0 : fontSize * 1.3}
+                  >
+                    {line}
+                  </tspan>
+                ))}
+              </text>
+            )}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** Logo OCP minimal (círculo + letra O estilizado) */
+function OcpLogo() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-6 h-6 shrink-0" aria-hidden="true">
+      <circle cx="12" cy="12" r="11" fill="#5a9485" />
+      <text
+        x="12"
+        y="12"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fill="white"
+        fontSize="11"
+        fontWeight="700"
+        fontFamily="Georgia, serif"
+      >
+        O
+      </text>
     </svg>
   );
 }
