@@ -46,26 +46,40 @@
 
 ---
 
-**Stack final:** Pipeline Python (ETL + análisis) → Supabase Postgres (cuando se conecta) → Next.js 15 dashboard
+---
 
-## 🌐 Dashboard live
+## 📦 Datos
 
-**🔗 https://chilecompra-anomalias.vercel.app**
+Los datasets no están commiteados (son >100MB cada uno). Para regenerar el análisis desde cero:
 
-4 páginas interactivas server-rendered con Recharts:
-- `/` — Landing con KPIs
-- `/compradores` — Top 15 organismos compradores
-- `/proveedores` — Top 15 proveedores del Estado
-- `/geografia` — Distribución por región
-- `/concentracion` — Scatter HHI vs gasto
+```bash
+# 1. Descarga OCDS cruda (~5.5 GB descomprimida, 525 MB comprimida)
+python src/download.py --years 2024 --extract
 
-**Stack del dashboard:** Next.js 15 (App Router, RSC) + React 19 + Tailwind 3 + Recharts + Supabase SSR.
+# 2. Limpia y une todo en un solo parquet (918K OC, 80 MB)
+python src/etl.py --years 2024
 
-**Modo dual:**
-- Con `NEXT_PUBLIC_SUPABASE_URL` configurado → datos live desde Postgres
-- Sin env vars → fallback a CSVs locales (modo demo, default para preview deploys)
+# 3. Carga a SQLite con índices (440 MB)
+python src/load_sqlite.py
 
-El SQL de migraciones está en `dashboard/supabase/migrations.sql` (5 funciones RPC + RLS + grants).
+# 4. Genera los CSVs de findings (los que se commitean en reports/)
+python src/run_eda.py
+
+# Tiempo total: ~15 minutos en 16 GB RAM
+```
+
+Output commiteado en el repo:
+
+| Archivo | Tamaño | Contenido |
+|---|---|---|
+| `reports/01_resumen_general.csv` | 200 B | KPIs globales (918K OC, $3.24B) |
+| `reports/02_top_compradores.csv` | 1.7 KB | Top 15 organismos compradores |
+| `reports/03_top_proveedores.csv` | 1.7 KB | Top 15 proveedores (con RUT) |
+| `reports/04_gasto_por_region.csv` | 1.4 KB | Gasto distribuido por región |
+| `reports/05_hhi_top30.csv` | 3.2 KB | HHI concentración por organismo |
+| `data/sample_oc.csv` | 367 KB | 1,000 OC de muestra para recruiter |
+
+Para detalles del esquema, ver [`data/README.md`](./data/README.md).
 
 ---
 
