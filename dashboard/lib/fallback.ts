@@ -1,15 +1,35 @@
 /**
- * Datos de fallback cuando Supabase no está configurado.
- * Lee los CSVs en reports/ y los devuelve con la misma forma
- * que las queries RPC.
+ * Datos embebidos (fallback offline).
  *
- * Esto permite que el dashboard se vea completo en modo demo
- * (cuando todavía no se ha conectado Supabase) o cuando hay
- * un error de conexión.
+ * Estos datos son los hallazgos clave del análisis ChileCompra 2024.
+ * Se embeben como TypeScript modules en lugar de CSVs para que
+ * (a) el dashboard funcione offline / sin filesystem
+ * (b) Vercel no necesite archivos runtime en /var/...
+ *
+ * Los datos originales están en /reports/*.csv en el repo
+ * y vienen de src/run_eda.py ejecutando contra data/chilecompra.db.
  */
 
-import { readFileSync } from "fs";
-import { join } from "path";
+import {
+  RESUMEN_TRANSFORMED,
+  type ResumenValues,
+} from "./data/resumen";
+import {
+  TOP_COMPRADORES,
+  type TopCompradorRow,
+} from "./data/top-compradores";
+import {
+  TOP_PROVEEDORES,
+  type TopProveedorRow,
+} from "./data/top-proveedores";
+import {
+  GASTO_POR_REGION,
+  type RegionRow,
+} from "./data/regiones";
+import {
+  HHI_TOP30,
+  type HHIRow,
+} from "./data/hhi";
 import type {
   ResumenGeneral,
   TopComprador,
@@ -18,92 +38,63 @@ import type {
   HHIOrganismo,
 } from "./queries";
 
-const REPORTS_DIR = join(process.cwd(), "..", "reports");
-
-function readCSV<T>(filename: string): T[] {
-  const path = join(REPORTS_DIR, filename);
-  const text = readFileSync(path, "utf-8");
-  const lines = text.trim().split("\n");
-  const headers = lines[0].split(",").map((h) => h.trim());
-
-  return lines.slice(1).map((line) => {
-    // CSV parser simple (no maneja quoted commas, pero los CSVs no las tienen)
-    const values = parseCSVLine(line);
-    const obj: Record<string, string> = {};
-    headers.forEach((h, i) => {
-      obj[h] = values[i] ?? "";
-    });
-    return obj as unknown as T;
-  });
-}
-
-function parseCSVLine(line: string): string[] {
-  // Split simple por coma (los datos no tienen comas en valores)
-  return line.split(",").map((v) => v.trim());
-}
-
+// Resumen general
 export function getResumenGeneralFallback(): ResumenGeneral {
-  const csv = readCSV<Record<string, string>>("01_resumen_general.csv")[0];
-  return {
-    total_oc: Number(csv.total_oc),
-    organismos: Number(csv.organismos),
-    proveedores: Number(csv.proveedores),
-    monto_total: Number(csv.monto_billones_clp) * 1e12,
-    monto_promedio: Number(csv.promedio_millones) * 1e6,
-    oc_con_proveedor: Math.round(Number(csv.total_oc) * 0.92),
-    oc_con_comprador: Math.round(Number(csv.total_oc) * 0.75),
-  };
+  return RESUMEN_TRANSFORMED as ResumenGeneral;
 }
 
+// Top compradores
 export function getTopCompradoresFallback(): TopComprador[] {
-  const csv = readCSV<Record<string, string>>("02_top_compradores.csv");
-  return csv.map((row) => ({
-    buyer_id: row.buyer_name, // sin ID en el CSV
-    buyer_name: row.buyer_name,
-    num_oc: Number(row.num_oc),
-    monto_total: Number(row.monto_mil_millones) * 1e9,
-    monto_promedio: Number(row.promedio_millones) * 1e6,
-    num_proveedores: Number(row.num_proveedores),
+  return TOP_COMPRADORES.map((r: TopCompradorRow) => ({
+    buyer_id: r.buyer_name, // el CSV no tiene ID, usamos el nombre
+    buyer_name: r.buyer_name,
+    num_oc: r.num_oc,
+    // Convertir miles de millones → CLP raw
+    monto_total: Math.round(r.monto_mil_millones * 1e9),
+    monto_promedio: Math.round(r.promedio_millones * 1e6),
+    num_proveedores: r.num_proveedores,
   }));
 }
 
+// Top proveedores
 export function getTopProveedoresFallback(): TopProveedor[] {
-  const csv = readCSV<Record<string, string>>("03_top_proveedores.csv");
-  return csv.map((row) => ({
-    supplier_rut: row.supplier_rut,
-    supplier_name: row.supplier_name,
-    supplier_legal_name: row.supplier_legal_name || row.supplier_name,
-    supplier_region: row.supplier_region,
-    num_oc: Number(row.num_oc),
-    monto_total: Number(row.monto_mil_millones) * 1e9,
-    num_compradores: Number(row.num_compradores),
+  return TOP_PROVEEDORES.map((r: TopProveedorRow) => ({
+    supplier_rut: r.supplier_rut,
+    supplier_name: r.supplier_name,
+    supplier_legal_name: r.supplier_legal_name,
+    supplier_region: r.supplier_region,
+    num_oc: r.num_oc,
+    monto_total: Math.round(r.monto_mil_millones * 1e9),
+    num_compradores: r.num_compradores,
   }));
 }
 
+// Gasto por región
 export function getGastoPorRegionFallback(): GastoRegion[] {
-  const csv = readCSV<Record<string, string>>("04_gasto_por_region.csv");
-  return csv.map((row) => ({
-    supplier_region: row.supplier_region,
-    num_oc: Number(row.num_oc),
-    monto_total: Number(row.monto_mil_millones) * 1e9,
-    num_proveedores: Number(row.num_proveedores),
-    num_compradores: Number(row.num_compradores),
+  return GASTO_POR_REGION.map((r: RegionRow) => ({
+    supplier_region: r.supplier_region.trim(),
+    num_oc: r.num_oc,
+    monto_total: Math.round(r.monto_mil_millones * 1e9),
+    num_proveedores: r.num_proveedores,
+    num_compradores: r.num_compradores,
   }));
 }
 
+// HHI top 30
 export function getHHITop30Fallback(): HHIOrganismo[] {
-  const csv = readCSV<Record<string, string>>("05_hhi_top30.csv");
-  return csv.map((row) => ({
-    buyer_name: row.buyer_name,
-    monto_total: Number(row.monto_mil_millones) * 1e9,
-    num_proveedores: Number(row.num_proveedores),
-    hhi: Number(row.hhi),
-    nivel: row.nivel.replace(/🚨|⚠️|✅/g, "").trim(), // limpiar emojis
+  return HHI_TOP30.map((r: HHIRow) => ({
+    buyer_name: r.buyer_name,
+    monto_total: Math.round(r.monto_mil_millones * 1e9),
+    num_proveedores: r.num_proveedores,
+    hhi: r.hhi,
+    nivel: r.nivel,
   }));
 }
 
 /**
  * Verifica si Supabase está configurado.
+ * Si las env vars están presentes → intenta RPC.
+ * Si no → usa datos embebidos.
  */
 export function hasSupabaseConfig(): boolean {
   return !!(
@@ -112,3 +103,6 @@ export function hasSupabaseConfig(): boolean {
     process.env.NEXT_PUBLIC_SUPABASE_URL.startsWith("https://")
   );
 }
+
+// Re-exportar ResumenValues para usos externos
+export type { ResumenValues };
