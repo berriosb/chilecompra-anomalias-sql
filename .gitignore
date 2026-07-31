@@ -35,6 +35,13 @@ env/
 .DS_Store
 Thumbs.db
 
+# Next.js & Node
+node_modules/
+.next/
+dashboard/node_modules/
+dashboard/.next/
+.stitch-review/
+
 # Logs
 *.log
 .vercel

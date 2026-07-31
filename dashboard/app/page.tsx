@@ -11,6 +11,7 @@ export const dynamic = "force-dynamic";
 
 import { getResumenGeneral, hasSupabaseConfig } from "@/lib/queries";
 import { formatCompact, formatCLP } from "@/lib/utils";
+import { FeaturedTreemap } from "./FeaturedTreemap";
 
 /**
  * Landing page del dashboard.
@@ -499,133 +500,8 @@ function ScatterPreview() {
 }
 
 /* ============================================================
-   Visualización Destacada: Treemap de Gasto por Categoría
+   Visualización Destacada: Treemap de Gasto por Categoría (en FeaturedTreemap.tsx)
    ============================================================ */
-
-/**
- * Datos de gasto público por categoría (aproximación basada en
- * distribución real de compras públicas Chile 2024 por rubro UNSPSC).
- * Solo se usa para la visualización decorativa de la landing.
- */
-interface CategoriaGasto {
-  nombre: string;
-  porcentaje: number;
-  color: string;
-}
-
-const CATEGORIAS_GASTO: CategoriaGasto[] = [
-  { nombre: "Salud",               porcentaje: 28, color: "#1f3a52" },
-  { nombre: "Infraestructura",     porcentaje: 18, color: "#3a6d7a" },
-  { nombre: "Tecnología",          porcentaje: 12, color: "#5a9485" },
-  { nombre: "Educación",           porcentaje: 10, color: "#4a7c8c" },
-  { nombre: "Equipamiento\ny suministros", porcentaje: 8, color: "#d4a437" },
-  { nombre: "Servicios\nprofesionales",    porcentaje: 6, color: "#1f3a52" },
-  { nombre: "Alimentación",        porcentaje: 5, color: "#c1502e" },
-  { nombre: "Transporte",          porcentaje: 4, color: "#4a7c8c" },
-  { nombre: "Defensa",             porcentaje: 4, color: "#3a6d7a" },
-  { nombre: "Energía",             porcentaje: 3, color: "#6a7d8a" },
-  { nombre: "Otros",               porcentaje: 2, color: "#5a9485" },
-];
-
-/** Treemap layout sencillo: squarified simplificado (slice-and-dice) */
-function layoutTreemap(
-  items: CategoriaGasto[],
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  vertical: boolean
-): { x: number; y: number; w: number; h: number; item: CategoriaGasto }[] {
-  if (items.length === 0) return [];
-  if (items.length === 1) {
-    return [{ x, y, w, h, item: items[0] }];
-  }
-
-  const total = items.reduce((s, c) => s + c.porcentaje, 0);
-  const result: { x: number; y: number; w: number; h: number; item: CategoriaGasto }[] = [];
-
-  // Split into two halves roughly equal by weight
-  let half = 0;
-  let splitIdx = 0;
-  for (let i = 0; i < items.length; i++) {
-    half += items[i].porcentaje;
-    if (half >= total / 2) {
-      splitIdx = i + 1;
-      break;
-    }
-  }
-  if (splitIdx === 0) splitIdx = 1;
-
-  const left = items.slice(0, splitIdx);
-  const right = items.slice(splitIdx);
-  const leftTotal = left.reduce((s, c) => s + c.porcentaje, 0);
-  const ratio = leftTotal / total;
-
-  if (vertical) {
-    const splitW = w * ratio;
-    result.push(...layoutTreemap(left, x, y, splitW, h, !vertical));
-    result.push(...layoutTreemap(right, x + splitW, y, w - splitW, h, !vertical));
-  } else {
-    const splitH = h * ratio;
-    result.push(...layoutTreemap(left, x, y, w, splitH, !vertical));
-    result.push(...layoutTreemap(right, x, y + splitH, w, h - splitH, !vertical));
-  }
-
-  return result;
-}
-
-function FeaturedTreemap() {
-  const rects = layoutTreemap(CATEGORIAS_GASTO, 0, 0, 100, 100, true);
-  const gap = 0.4;
-
-  return (
-    <svg viewBox="0 0 100 100" className="w-full" style={{ aspectRatio: "5/3" }} aria-hidden="true">
-      {rects.map((r, i) => {
-        const rx = r.x + gap / 2;
-        const ry = r.y + gap / 2;
-        const rw = Math.max(r.w - gap, 0.5);
-        const rh = Math.max(r.h - gap, 0.5);
-        const lines = r.item.nombre.split("\n");
-        const fontSize = rw > 15 && rh > 12 ? 2.8 : rw > 8 && rh > 8 ? 2.2 : 0;
-        return (
-          <g key={i}>
-            <rect
-              x={rx}
-              y={ry}
-              width={rw}
-              height={rh}
-              rx="0.8"
-              fill={r.item.color}
-              className="transition-opacity hover:opacity-80"
-            />
-            {fontSize > 0 && (
-              <text
-                x={rx + rw / 2}
-                y={ry + rh / 2 - (lines.length - 1) * (fontSize * 0.6)}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill="white"
-                fontSize={fontSize}
-                fontWeight="600"
-                style={{ pointerEvents: "none" }}
-              >
-                {lines.map((line, li) => (
-                  <tspan
-                    key={li}
-                    x={rx + rw / 2}
-                    dy={li === 0 ? 0 : fontSize * 1.3}
-                  >
-                    {line}
-                  </tspan>
-                ))}
-              </text>
-            )}
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
 
 /** Logo OCP minimal (círculo + letra O estilizado) */
 function OcpLogo() {
