@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { ArrowUpRight, Database, TrendingUp, Users, Building2 } from "lucide-react";
+import {
+  ArrowUpRight,
+  Database,
+  TrendingUp,
+  Users,
+  Building2,
+} from "lucide-react";
 export const dynamic = "force-dynamic";
 
 import { getResumenGeneral, hasSupabaseConfig } from "@/lib/queries";
@@ -26,86 +32,66 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-paper">
+    <main className="min-h-screen bg-paper text-ink">
       <Header />
 
-      {/* Hero */}
-      <section className="border-b border-grid">
-        <div className="max-w-6xl mx-auto px-6 py-16 md:py-24">
-          <p className="text-sm uppercase tracking-wider text-ink-muted mb-3">
+      {/* Hero con fondo cyan claro + red de nodos decorativa */}
+      <section className="relative overflow-hidden border-b border-grid bg-[#e8f0ee]">
+        <NodeNetworkDecor />
+        <div className="relative max-w-6xl mx-auto px-6 pt-12 md:pt-16 pb-24 md:pb-32">
+          <p className="text-sm uppercase tracking-[0.2em] text-ink-muted mb-6 font-medium">
             ChileCompra · 2024
           </p>
-          <h1 className="font-display text-4xl md:text-6xl text-ink leading-tight mb-6">
-            ¿Quién gasta la plata pública,<br />
-            en qué, y con quién?
+          <h1 className="font-display text-5xl md:text-7xl text-ink leading-[1.05] tracking-tight mb-8 max-w-4xl">
+            ¿Quién gasta la plata
+            <br />
+            pública, en qué, y
+            <br />
+            con quién?
           </h1>
-          <p className="text-lg text-ink-muted max-w-2xl leading-relaxed">
-            Análisis de <strong className="text-ink">918K órdenes de compra</strong> del
-            Estado chileno usando datos abiertos OCDS (CC0 1.0). Detección de
-            concentración de mercado, top proveedores, distribución territorial y
-            anomalías de precio.
+          <p className="text-lg md:text-xl text-ink-muted max-w-2xl leading-relaxed">
+            Análisis de <strong className="text-ink font-semibold">918K órdenes de compra</strong>{" "}
+            del Estado chileno. Detección de concentración de mercado, top
+            proveedores, distribución territorial y anomalías de precio.
           </p>
         </div>
       </section>
 
-      {/* KPIs */}
+      {/* KPIs — cards con íconos de color, sobre el borde del hero */}
       {resumen && (
-        <section className="border-b border-grid">
-          <div className="max-w-6xl mx-auto px-6 py-12">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <KPI
-                icon={<Database className="w-5 h-5" />}
-                label="Órdenes de compra"
-                value={formatCLP(resumen.total_oc)}
-              />
-              <KPI
-                icon={<Building2 className="w-5 h-5" />}
-                label="Organismos"
-                value={formatCLP(resumen.organismos)}
-              />
-              <KPI
-                icon={<Users className="w-5 h-5" />}
-                label="Proveedores"
-                value={formatCLP(resumen.proveedores)}
-              />
-              <KPI
-                icon={<TrendingUp className="w-5 h-5" />}
-                label="Monto total"
-                value={`$${formatCompact(resumen.monto_total)}`}
-                suffix="CLP"
-              />
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Estado de Supabase — solo si NO hay Supabase Y NO hay datos fallback */}
-      {!hasSupabase && !resumen && (
-        <section className="max-w-6xl mx-auto px-6 py-12">
-          <div className="border border-amber-300 bg-amber-50 rounded-lg p-6">
-            <h3 className="font-display text-xl mb-2 text-amber-900">
-              Dashboard en modo demo
-            </h3>
-            <p className="text-amber-800 mb-4">
-              Las variables de Supabase no están configuradas. Para ver datos en vivo,
-              agregá estas env vars en tu <code>.env.local</code>:
-            </p>
-            <pre className="bg-amber-100 text-amber-900 p-4 rounded text-sm overflow-x-auto">
-{`NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key`}
-            </pre>
-            <p className="text-amber-800 mt-4">
-              Después corré el SQL de{" "}
-              <code className="bg-amber-100 px-1 rounded">dashboard/supabase/migrations.sql</code>{" "}
-              en el SQL Editor de tu proyecto Supabase.
-            </p>
+        <section className="max-w-6xl mx-auto px-6 -mt-16 md:-mt-20 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+            <KPI
+              icon={<Database className="w-5 h-5" />}
+              label="Total Órdenes"
+              value={formatCLP(resumen.total_oc)}
+              iconBg="bg-[#4a7c8c]"
+            />
+            <KPI
+              icon={<Building2 className="w-5 h-5" />}
+              label="Organismos"
+              value={formatCLP(resumen.organismos)}
+              iconBg="bg-[#5a9485]"
+            />
+            <KPI
+              icon={<Users className="w-5 h-5" />}
+              label="Proveedores"
+              value={formatCLP(resumen.proveedores)}
+              iconBg="bg-[#d4a437]"
+            />
+            <KPI
+              icon={<TrendingUp className="w-5 h-5" />}
+              label="Monto Total"
+              value={`CLP $${formatCompact(resumen.monto_total)}`}
+              iconBg="bg-[#c1502e]"
+            />
           </div>
         </section>
       )}
 
       {/* Banner demo (cuando funciona con fallback CSVs) */}
       {!hasSupabase && resumen && (
-        <section className="max-w-6xl mx-auto px-6 py-6">
+        <section className="max-w-6xl mx-auto px-6 pt-6">
           <div className="border border-grid bg-bg-subtle rounded-lg p-4 text-sm text-ink-muted">
             <strong className="text-ink">Modo demo:</strong>{" "}
             datos servidos desde los CSVs locales. Para conectar Supabase, agregá
@@ -116,6 +102,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key`}
         </section>
       )}
 
+      {/* Banner error */}
       {error && (
         <section className="max-w-6xl mx-auto px-6 py-12">
           <div className="border border-red-300 bg-red-50 rounded-lg p-6">
@@ -133,34 +120,52 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key`}
         </section>
       )}
 
-      {/* Secciones */}
-      <section className="max-w-6xl mx-auto px-6 py-16">
-        <h2 className="font-display text-2xl mb-8 text-ink">Explorar el análisis</h2>
-        <div className="grid md:grid-cols-2 gap-6">
+      {/* Explorar el análisis — 4 cards con mini-gráficos */}
+      <section className="max-w-6xl mx-auto px-6 py-16 md:py-24">
+        <h2 className="font-display text-3xl md:text-4xl text-ink mb-10">
+          Explorar el análisis
+        </h2>
+        <div className="grid md:grid-cols-2 gap-4 md:gap-6">
           <NavCard
             href="/compradores"
             title="¿Quién compra más?"
-            subtitle="Top 15 organismos compradores por monto total"
-            stat={resumen ? `${formatCLP(resumen.organismos)} organismos` : undefined}
+            subtitle="Top 15 organismos compradores por monto total."
+            visual={<TreemapPreview />}
+            visualBg="bg-[#e8f0ee]"
           />
           <NavCard
             href="/proveedores"
             title="¿Quién vende más?"
-            subtitle="Top 15 proveedores del Estado por venta total"
-            stat={resumen ? `${formatCLP(resumen.proveedores)} proveedores` : undefined}
+            subtitle="Top 15 proveedores del Estado por venta total."
+            visual={<BarChartPreview />}
           />
           <NavCard
             href="/geografia"
             title="¿Dónde están los proveedores?"
-            subtitle="Distribución del gasto por región del proveedor"
+            subtitle="Distribución del gasto por región del proveedor."
+            visual={<ChileMapPreview />}
+            visualBg="bg-[#e8f0ee]"
           />
           <NavCard
             href="/concentracion"
             title="¿Dónde hay concentración sospechosa?"
-            subtitle="HHI por organismo: detecta mercados poco competitivos"
+            subtitle="HHI por organismo: detecta mercados poco competitivos."
+            visual={<ScatterPreview />}
           />
         </div>
       </section>
+
+      {/* Visualización Destacada — DESHABILITADO por ahora
+          (requiere query nueva a Supabase: gasto_por_categoria)
+          Se deja el bloque comentado para implementar en próximo sprint
+          cuando agreguemos la query de categorías OCDE/UNSPSC.
+      */}
+      {/* <section className="max-w-6xl mx-auto px-6 pb-16">
+        <h2 className="font-display text-3xl md:text-4xl text-ink mb-10">
+          Visualización Destacada
+        </h2>
+        <FeaturedTreemap />
+      </section> */}
 
       <Footer />
     </main>
@@ -169,22 +174,25 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=tu-anon-key`}
 
 function Header() {
   return (
-    <header className="border-b border-grid">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="font-display text-lg text-ink">
+    <header className="relative z-20">
+      <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+        <Link
+          href="/"
+          className="font-display text-xl text-ink hover:opacity-80 transition-opacity"
+        >
           ChileCompra<span className="text-accent">.</span>
         </Link>
-        <nav className="flex gap-6 text-sm">
-          <Link href="/compradores" className="text-ink-muted hover:text-ink">
+        <nav className="hidden md:flex gap-8 text-sm text-ink-muted">
+          <Link href="/compradores" className="hover:text-ink transition-colors">
             Compradores
           </Link>
-          <Link href="/proveedores" className="text-ink-muted hover:text-ink">
+          <Link href="/proveedores" className="hover:text-ink transition-colors">
             Proveedores
           </Link>
-          <Link href="/geografia" className="text-ink-muted hover:text-ink">
+          <Link href="/geografia" className="hover:text-ink transition-colors">
             Geografía
           </Link>
-          <Link href="/concentracion" className="text-ink-muted hover:text-ink">
+          <Link href="/concentracion" className="hover:text-ink transition-colors">
             Concentración
           </Link>
         </nav>
@@ -197,25 +205,28 @@ function KPI({
   icon,
   label,
   value,
-  suffix,
+  iconBg,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
-  suffix?: string;
+  iconBg: string;
 }) {
   return (
-    <div>
-      <div className="flex items-center gap-2 text-ink-muted mb-2">
-        {icon}
-        <span className="text-xs uppercase tracking-wider">{label}</span>
+    <div className="bg-white border border-grid rounded-xl p-4 md:p-5 shadow-sm">
+      <div className="flex items-start gap-3 mb-3">
+        <div
+          className={`${iconBg} text-white rounded-md w-9 h-9 flex items-center justify-center shrink-0`}
+        >
+          {icon}
+        </div>
+        <span className="text-[11px] uppercase tracking-wider text-ink-muted font-medium pt-1.5">
+          {label}
+        </span>
       </div>
-      <div className="font-display text-3xl md:text-4xl text-ink tabular leading-none">
+      <div className="font-display text-2xl md:text-3xl text-ink tabular leading-none font-semibold">
         {value}
       </div>
-      {suffix && (
-        <div className="text-xs text-ink-muted mt-1">{suffix}</div>
-      )}
     </div>
   );
 }
@@ -224,26 +235,39 @@ function NavCard({
   href,
   title,
   subtitle,
-  stat,
+  visual,
+  visualBg,
 }: {
   href: string;
   title: string;
   subtitle: string;
-  stat?: string;
+  visual: React.ReactNode;
+  visualBg?: string;
 }) {
   return (
     <Link
       href={href}
-      className="group block border border-grid rounded-lg p-6 hover:border-ink-muted hover:bg-bg-subtle transition-colors"
+      className="group block bg-white border border-grid rounded-xl overflow-hidden hover:border-ink-muted hover:shadow-md transition-all"
     >
-      <div className="flex items-start justify-between mb-3">
-        <h3 className="font-display text-xl text-ink">{title}</h3>
-        <ArrowUpRight className="w-5 h-5 text-ink-muted group-hover:text-accent transition-colors" />
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_180px]">
+        <div className="p-5 md:p-6 flex flex-col justify-between min-h-[160px]">
+          <div>
+            <h3 className="font-display text-xl md:text-2xl text-ink mb-2 leading-snug">
+              {title}
+            </h3>
+            <p className="text-sm text-ink-muted leading-relaxed">{subtitle}</p>
+          </div>
+          <div className="mt-4 flex items-center gap-1 text-xs text-ink-muted group-hover:text-accent transition-colors">
+            <span>Explorar</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </div>
+        </div>
+        <div
+          className={`${visualBg ?? "bg-bg-subtle"} flex items-center justify-center p-4 sm:border-l border-grid min-h-[140px] sm:min-h-0`}
+        >
+          {visual}
+        </div>
       </div>
-      <p className="text-sm text-ink-muted mb-3">{subtitle}</p>
-      {stat && (
-        <div className="text-xs text-ink-muted tabular">{stat}</div>
-      )}
     </Link>
   );
 }
@@ -251,20 +275,179 @@ function NavCard({
 function Footer() {
   return (
     <footer className="border-t border-grid mt-12">
-      <div className="max-w-6xl mx-auto px-6 py-8 text-xs text-ink-muted">
+      <div className="max-w-6xl mx-auto px-6 py-8 text-xs text-ink-muted flex flex-col md:flex-row items-center justify-between gap-3">
         <p>
-          Datos: <a className="underline hover:text-ink" href="https://data.open-contracting.org/es/publication/144">
-            Open Contracting Partnership
-          </a>{" "}
-          · Licencia CC0 1.0 Universal
-        </p>
-        <p className="mt-1">
           Pipeline de análisis:{" "}
-          <a className="underline hover:text-ink" href="https://github.com/berriosb/chilecompra-anomalias-sql">
+          <a
+            className="underline hover:text-ink"
+            href="https://github.com/berriosb/chilecompra-anomalias-sql"
+          >
             github.com/berriosb/chilecompra-anomalias-sql
           </a>
         </p>
+        <Link href="/" className="font-display text-base text-ink">
+          ChileCompra<span className="text-accent">.</span>
+        </Link>
       </div>
     </footer>
+  );
+}
+
+/* ============================================================
+   Decoraciones y mini-gráficos placeholder (SVG inline)
+   ============================================================ */
+
+/** Red de nodos decorativa para el hero */
+function NodeNetworkDecor() {
+  return (
+    <svg
+      className="absolute inset-0 w-full h-full pointer-events-none"
+      viewBox="0 0 1200 500"
+      preserveAspectRatio="xMaxYMid slice"
+      aria-hidden="true"
+    >
+      <defs>
+        <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#5a9485" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#5a9485" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* Líneas conectoras */}
+      <g stroke="#5a9485" strokeWidth="0.5" opacity="0.4" fill="none">
+        <path d="M 800 100 L 950 180 L 1100 120" />
+        <path d="M 750 200 L 900 280 L 1050 220" />
+        <path d="M 850 320 L 1000 380 L 1150 300" />
+        <path d="M 700 80 L 800 100" />
+        <path d="M 950 180 L 1050 220" />
+        <path d="M 900 280 L 1000 380" />
+        <path d="M 1100 120 L 1150 300" />
+        <path d="M 800 100 L 900 280" />
+        <path d="M 1050 220 L 1150 300" />
+      </g>
+      {/* Nodos */}
+      {[
+        [800, 100, 4],
+        [950, 180, 5],
+        [1100, 120, 4],
+        [750, 200, 3],
+        [900, 280, 6],
+        [1050, 220, 4],
+        [850, 320, 3],
+        [1000, 380, 5],
+        [1150, 300, 4],
+        [700, 80, 2],
+      ].map(([cx, cy, r], i) => (
+        <g key={i}>
+          <circle cx={cx} cy={cy} r={r! * 6} fill="url(#nodeGlow)" />
+          <circle cx={cx} cy={cy} r={r} fill="#5a9485" />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/** Treemap placeholder para ¿Quién compra más? */
+function TreemapPreview() {
+  const cells = [
+    { x: 0, y: 0, w: 50, h: 50, c: "#1f3a52" },
+    { x: 50, y: 0, w: 30, h: 50, c: "#3a6d7a" },
+    { x: 80, y: 0, w: 20, h: 25, c: "#c1502e" },
+    { x: 80, y: 25, w: 20, h: 25, c: "#d4a437" },
+    { x: 0, y: 50, w: 35, h: 50, c: "#5a9485" },
+    { x: 35, y: 50, w: 30, h: 50, c: "#6a7d8a" },
+    { x: 65, y: 50, w: 18, h: 25, c: "#8a6d4a" },
+    { x: 65, y: 75, w: 18, h: 25, c: "#9a8d6a" },
+    { x: 83, y: 50, w: 17, h: 50, c: "#b5a07a" },
+  ];
+  return (
+    <svg viewBox="0 0 100 100" className="w-full h-32" aria-hidden="true">
+      {cells.map((cell, i) => (
+        <rect
+          key={i}
+          x={cell.x}
+          y={cell.y}
+          width={cell.w}
+          height={cell.h}
+          fill={cell.c}
+        />
+      ))}
+    </svg>
+  );
+}
+
+/** Bar chart placeholder para ¿Quién vende más? */
+function BarChartPreview() {
+  const bars = [40, 35, 30, 28, 25, 22, 20, 18, 16, 14, 12, 10, 9, 8, 7];
+  return (
+    <svg viewBox="0 0 100 60" className="w-full h-32" aria-hidden="true">
+      {bars.map((h, i) => {
+        const x = 4 + i * 6.2;
+        const y = 55 - h;
+        return (
+          <rect
+            key={i}
+            x={x}
+            y={y}
+            width="4.2"
+            height={h}
+            fill={i < 3 ? "#1f3a52" : i < 7 ? "#5a9485" : "#a3b3a8"}
+          />
+        );
+      })}
+      <line x1="0" y1="55" x2="100" y2="55" stroke="#8a8580" strokeWidth="0.3" />
+    </svg>
+  );
+}
+
+/** Mapa de Chile minimal placeholder */
+function ChileMapPreview() {
+  return (
+    <svg viewBox="0 0 60 100" className="h-32 w-auto" aria-hidden="true">
+      <path
+        d="M 25 5 Q 30 10 28 20 L 30 35 Q 32 50 28 60 L 25 80 Q 22 90 18 95 L 15 95 Q 12 90 14 80 L 18 60 Q 20 50 18 35 L 20 20 Q 22 10 25 5 Z"
+        fill="#5a9485"
+        opacity="0.4"
+      />
+      {/* Círculos de intensidad por región */}
+      <circle cx="22" cy="25" r="4" fill="#1f3a52" opacity="0.8" />
+      <circle cx="26" cy="40" r="6" fill="#1f3a52" opacity="0.9" />
+      <circle cx="24" cy="55" r="3" fill="#5a9485" opacity="0.7" />
+      <circle cx="20" cy="70" r="3" fill="#5a9485" opacity="0.6" />
+      <circle cx="18" cy="85" r="2" fill="#a3b3a8" opacity="0.6" />
+    </svg>
+  );
+}
+
+/** Scatter plot placeholder para HHI */
+function ScatterPreview() {
+  // Cluster denso abajo-izq, outliers arriba-derecha (HHI alto)
+  const points: [number, number][] = [];
+  // Cluster bajo
+  for (let i = 0; i < 30; i++) {
+    points.push([15 + Math.random() * 25, 70 + Math.random() * 20]);
+  }
+  // Outliers
+  for (let i = 0; i < 5; i++) {
+    points.push([55 + Math.random() * 30, 15 + Math.random() * 30]);
+  }
+  return (
+    <svg viewBox="0 0 100 100" className="w-full h-32" aria-hidden="true">
+      {/* Ejes */}
+      <line x1="5" y1="95" x2="95" y2="95" stroke="#8a8580" strokeWidth="0.3" />
+      <line x1="5" y1="5" x2="5" y2="95" stroke="#8a8580" strokeWidth="0.3" />
+      {points.map(([x, y], i) => {
+        const isOutlier = x > 50;
+        return (
+          <circle
+            key={i}
+            cx={x}
+            cy={y}
+            r={isOutlier ? 2.5 : 1.5}
+            fill={isOutlier ? "#c1502e" : "#5a9485"}
+            opacity={isOutlier ? 0.9 : 0.6}
+          />
+        );
+      })}
+    </svg>
   );
 }
