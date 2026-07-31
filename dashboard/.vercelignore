@@ -1,0 +1,34 @@
+# Ignorar archivos grandes que no necesita Vercel
+data/
+notebooks/
+*.parquet
+*.db
+*.csv
+*.tar.gz
+*.gz
+
+# Ignorar el repo padre (chilecompra-anomalias-sql/) desde el subdirectorio dashboard/
+# Vercel solo necesita lo que está en dashboard/
+README.md
+.gitignore
+LICENSE
+docs/
+reports/
+requirements.txt
+src/
+sql/
+
+# Python venvs y caches
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+.vercel

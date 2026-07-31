@@ -14,3 +14,4 @@ dashboard/.env.*.local
 dashboard/.turbo/
 dashboard/.tsbuildinfo
 dashboard/next-env.d.ts
+.vercel

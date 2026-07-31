@@ -41,6 +41,29 @@
 
 ---
 
+**Stack final:** Pipeline Python (ETL + análisis) → Supabase Postgres (cuando se conecta) → Next.js 15 dashboard
+
+## 🌐 Dashboard live
+
+**🔗 https://chilecompra-anomalias.vercel.app**
+
+4 páginas interactivas server-rendered con Recharts:
+- `/` — Landing con KPIs
+- `/compradores` — Top 15 organismos compradores
+- `/proveedores` — Top 15 proveedores del Estado
+- `/geografia` — Distribución por región
+- `/concentracion` — Scatter HHI vs gasto
+
+**Stack del dashboard:** Next.js 15 (App Router, RSC) + React 19 + Tailwind 3 + Recharts + Supabase SSR.
+
+**Modo dual:**
+- Con `NEXT_PUBLIC_SUPABASE_URL` configurado → datos live desde Postgres
+- Sin env vars → fallback a CSVs locales (modo demo, default para preview deploys)
+
+El SQL de migraciones está en `dashboard/supabase/migrations.sql` (5 funciones RPC + RLS + grants).
+
+---
+
 ## Contexto
 
 El Estado chileno gasta ~US$15 mil millones al año en compras públicas a través de la plataforma **Mercado Público**, administrada por [ChileCompra](https://www.chilecompra.cl). La Ley 19.886 obliga a 850 instituciones del Estado (ministerios, municipalidades, hospitales, fuerzas armadas, universidades) a comprar a través de esta plataforma.
@@ -114,12 +137,30 @@ chilecompra-anomalias-sql/
 │   ├── 04_estacionalidad.sql
 │   └── queries_auxiliares.sql      ← vistas + funciones
 │
+├── src/
+│   ├── download.py                 ← descarga OCDS con curl
+│   ├── etl.py                      ← une 4 CSVs → parquet (optimizado RAM)
+│   ├── load_sqlite.py              ← parquet → SQLite con índices
+│   ├── load_supabase.py            ← alternativa para PostgreSQL
+│   ├── run_eda.py                  ← ejecuta 5 queries analíticas
+│   ├── generate_sample.py          ← crea sample_oc.csv
+│   ├── generate_visualizations.py  ← genera 4 PNGs editoriales
+│   └── config.py                   ← paths + .env
+│
+├── dashboard/                          ← Next.js 15 + React 19 + Recharts + Supabase
+│   ├── app/                            ← App Router (Server Components)
+│   ├── lib/                            ← queries, utils, Supabase clients, fallback
+│   ├── supabase/migrations.sql         ← DDL + 5 funciones RPC + RLS
+│   ├── package.json
+│   └── .vercelignore                   ← excluye data/ del upload a Vercel
+│
 ├── reports/
 │   ├── 01_resumen_general.csv
 │   ├── 02_top_compradores.csv
 │   ├── 03_top_proveedores.csv
 │   ├── 04_gasto_por_region.csv
-│   └── 05_hhi_top30.csv            ← hallazgos de concentración
+│   ├── 05_hhi_top30.csv                ← hallazgos de concentración
+│   └── images/                         ← 4 visualizaciones PNG editoriales
 │
 └── docs/
     ├── METODOLOGIA.md
