@@ -6,6 +6,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Dataset: OCDS](https://img.shields.io/badge/Dataset-OCDS-green)](https://data.open-contracting.org/es/publication/144)
 [![SQL: SQLite/PostgreSQL](https://img.shields.io/badge/SQL-SQLite%2FPostgreSQL-blue)](./sql/)
+[![Dashboard: live](https://img.shields.io/badge/Dashboard-live-success)](https://chilecompra-anomalias.vercel.app)
+
+## 🌐 Ver el dashboard en vivo
+
+**👉 [https://chilecompra-anomalias.vercel.app](https://chilecompra-anomalias.vercel.app)** — 5 páginas interactivas con datos de compras públicas chilenas, server-rendered con Next.js 15 + Recharts.
 
 ## Hallazgos principales
 
