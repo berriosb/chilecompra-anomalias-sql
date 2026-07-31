@@ -1,34 +1,27 @@
-# Ignorar archivos grandes que no necesita Vercel
-data/
-notebooks/
+# ============================================
+# .vercelignore — archivos NO enviados a Vercel
+# Vercel solo necesita código de dashboard/ + node_modules
+# ============================================
+
+# IGNORAR: datos pesados (data/ contiene .ts con datos embebidos pero también
+# volumen bruto .parquet y .db que NO deben ir a Vercel)
 *.parquet
 *.db
-*.csv
-*.tar.gz
 *.gz
+data/raw/
 
-# Ignorar el repo padre (chilecompra-anomalias-sql/) desde el subdirectorio dashboard/
-# Vercel solo necesita lo que está en dashboard/
-README.md
-.gitignore
-LICENSE
-docs/
-reports/
-requirements.txt
-src/
-sql/
+# IGNORAR: el repo padre desde dentro de dashboard/
+../README.md
+../.gitignore
+../LICENSE
+../docs/
+../reports/
+../requirements.txt
+../src/
+../sql/
 
-# Python venvs y caches
-.venv/
-venv/
-__pycache__/
-.pytest_cache/
-*.pyc
+# IGNORAR: archivos locales de Vercel
+.vercel/
 
-# IDE
-.vscode/
-.idea/
-
-# Logs
-*.log
-.vercel
+# NOTA: dashboard/lib/data/*.ts SÍ debe incluirse (datos embebidos)
+# ============================================
