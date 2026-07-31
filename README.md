@@ -11,44 +11,33 @@
 
 > **918,052 OC analizadas** | **5,321 organismos compradores** | **35,492 proveedores** | **$3.24 billones CLP**
 
-### Top 5 organismos compradores (2024)
+### ¿Quién compra más al Estado?
 
-| # | Organismo | OC | Monto (MM CLP) | Proveedores |
-|---|---|---|---|---|
-| 1 | CENABAST (Central Abastecimiento Salud) | 269 | 234,790 | 81 |
-| 2 | ONEMI | 2,612 | 69,860 | 63 |
-| 3 | FONASA | 227 | 47,690 | 116 |
-| 4 | I. Municipalidad de Maipú | 115 | 32,290 | 101 |
-| 5 | Hospital Puerto Montt | 8,845 | 31,520 | 734 |
+![Top compradores](reports/images/01_top_compradores.png)
 
-### Top 5 proveedores (venta al Estado)
+### ¿Quién vende más al Estado?
 
-| # | Proveedor | OC | Monto (MM CLP) | Compradores |
-|---|---|---|---|---|
-| 1 | COPEC S.A. | 6,555 | 51,550 | 1,526 |
-| 2 | Edenred Chile S.A. | 4,001 | 34,400 | 864 |
-| 3 | Sanofi-Aventis | 238 | 23,900 | 34 |
-| 4 | Gasco GLP | 7,849 | 23,900 | 1,599 |
-| 5 | Turavion (viajes) | 61,125 | 22,550 | 1,653 |
+![Top proveedores](reports/images/02_top_proveedores.png)
 
-### 🚨 Organismos con ALTA concentración de proveedores (HHI > 2500)
+### ¿Dónde están los proveedores?
 
-| Organismo | HHI | Proveedores | Monto (MM CLP) |
+![Distribución geográfica](reports/images/03_distribucion_geografica.png)
+
+### ¿Dónde hay concentración sospechosa de proveedores?
+
+![Concentración HHI](reports/images/04_concentracion_hhi.png)
+
+### Top 5 organismos con mayor concentración (HHI)
+
+| Organismo | HHI | Proveedores | Nivel |
 |---|---|---|---|
-| MOP Ñuble (OO.HH.) | **7,237** | 14 | 10,900 |
-| Servicio de Salud Sur | **6,304** | 280 | 18,170 |
-| Parque Metropolitano | **2,724** | 164 | 19,280 |
-| Municipalidad Huechuraba | **2,692** | 447 | 21,340 |
-| PDI | **2,642** | 153 | 21,930 |
+| MOP Ñuble (OO.HH.) | **7,237** | 14 | 🚨 Extremo |
+| Servicio de Salud Sur | **6,304** | 280 | 🚨 Extremo |
+| Parque Metropolitano | **2,724** | 164 | 🚨 Alto |
+| Municipalidad Huechuraba | **2,692** | 447 | 🚨 Alto |
+| PDI | **2,642** | 153 | 🚨 Alto |
 
-**Interpretación:** HHI > 2500 indica mercado altamente concentrado. El MOP Ñuble con solo 14 proveedores y un HHI de 7,237 es caso de libro: uno o dos proveedores dominan casi todo el gasto.
-
-### Distribución geográfica del gasto
-
-- **Región Metropolitana**: $2.13 billones (65.7% del total)
-- **Valparaíso**: $186 mil millones (5.8%)
-- **Biobío**: $161 mil millones (5.0%)
-- Resto del país: < 4% cada región
+**Interpretación:** HHI > 2,500 = mercado altamente concentrado. El MOP Ñuble con solo 14 proveedores y un HHI de 7,237 es caso de libro: uno o dos proveedores dominan casi todo el gasto.
 
 ---
 
