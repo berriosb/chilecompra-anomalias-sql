@@ -12,6 +12,15 @@
 
 **👉 [https://chilecompra-anomalias.vercel.app](https://chilecompra-anomalias.vercel.app)** — 5 páginas interactivas con datos de compras públicas chilenas, server-rendered con Next.js 15 + Recharts.
 
+## Qué demuestra este proyecto
+
+- **SQL analítico:** CTEs, funciones de ventana y cálculo de concentración HHI sobre compras públicas.
+- **Ingeniería de datos:** ETL reproducible en Python para limpiar y relacionar archivos OCDS a escala.
+- **Criterio de negocio:** traduce 918.052 órdenes de compra en hallazgos verificables sobre compradores, proveedores y territorio.
+- **Comunicación:** combina metodología, limitaciones, resultados descargables y un dashboard público.
+
+> Metadata recomendada para GitHub: [`docs/GITHUB_METADATA.md`](./docs/GITHUB_METADATA.md).
+
 ## Hallazgos principales
 
 > **918,052 OC analizadas** | **5,321 organismos compradores** | **35,492 proveedores** | **$3.24 billones CLP**
@@ -238,9 +247,9 @@ Ver [`docs/LIMITACIONES.md`](./docs/LIMITACIONES.md) para detalle completo.
 
 ## Próximos pasos
 
-- [ ] Generar visualizaciones (PNG + dashboard Next.js)
-- [ ] Análisis de anomalías de precio con z-score por categoría UNSPSC
-- [ ] Deploy dashboard en Vercel
+- [x] Generar visualizaciones (PNG + dashboard Next.js)
+- [x] Deploy dashboard en Vercel
+- [ ] Ampliar detección de anomalías de precio por categoría UNSPSC
 - [ ] Cross-reference con SERNAC (proveedores con reclamos)
 - [ ] Análisis de colusión por clusters temporales
 
