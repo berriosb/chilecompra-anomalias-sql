@@ -1,0 +1,16 @@
+# Dashboard deps
+dashboard/node_modules/
+dashboard/.next/
+dashboard/out/
+dashboard/.vercel/
+dashboard/*.log
+
+# Env
+dashboard/.env
+dashboard/.env.local
+dashboard/.env.*.local
+
+# Build cache
+dashboard/.turbo/
+dashboard/.tsbuildinfo
+dashboard/next-env.d.ts

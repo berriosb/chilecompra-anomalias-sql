@@ -184,12 +184,6 @@ Ver [`docs/LIMITACIONES.md`](./docs/LIMITACIONES.md) para detalle completo.
 - [ ] Cross-reference con SERNAC (proveedores con reclamos)
 - [ ] Análisis de colusión por clusters temporales
 
-## Autor
-
-**Bastian Berrios** — Ingeniero Civil Industrial, buscando trabajo como Data Analyst
-- GitHub: [@berriosb](https://github.com/berriosb)
-- LinkedIn: [bastian-berrios](https://linkedin.com/in/bastian-berrios)
-
 ## Licencia
 
 - **Código:** MIT
