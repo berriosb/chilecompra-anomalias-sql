@@ -75,6 +75,11 @@ export async function getResumenGeneral(): Promise<ResumenGeneral> {
     const supabase = await createClient();
     const { data, error } = await supabase.rpc("resumen_general");
     if (error) throw error;
+    // Blindaje: si Supabase retorna null o vacío, usar fallback embebido
+    if (!data || (typeof data === "object" && data.total_oc == null)) {
+      console.warn("resumen_general RPC returned null/empty, using fallback");
+      return getResumenGeneralFallback();
+    }
     return data as ResumenGeneral;
   } catch (e) {
     console.error("Supabase failed, using fallback:", e);
@@ -88,6 +93,10 @@ export async function getTopCompradores(limit = 15): Promise<TopComprador[]> {
     const supabase = await createClient();
     const { data, error } = await supabase.rpc("top_compradores", { p_limit: limit });
     if (error) throw error;
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+      console.warn("top_compradores RPC returned null/empty, using fallback");
+      return getTopCompradoresFallback().slice(0, limit);
+    }
     return data as TopComprador[];
   } catch (e) {
     console.error("Supabase failed, using fallback:", e);
@@ -101,6 +110,10 @@ export async function getTopProveedores(limit = 15): Promise<TopProveedor[]> {
     const supabase = await createClient();
     const { data, error } = await supabase.rpc("top_proveedores", { p_limit: limit });
     if (error) throw error;
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+      console.warn("top_proveedores RPC returned null/empty, using fallback");
+      return getTopProveedoresFallback().slice(0, limit);
+    }
     return data as TopProveedor[];
   } catch (e) {
     console.error("Supabase failed, using fallback:", e);
@@ -114,6 +127,10 @@ export async function getGastoPorRegion(): Promise<GastoRegion[]> {
     const supabase = await createClient();
     const { data, error } = await supabase.rpc("gasto_por_region");
     if (error) throw error;
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+      console.warn("gasto_por_region RPC returned null/empty, using fallback");
+      return getGastoPorRegionFallback();
+    }
     return data as GastoRegion[];
   } catch (e) {
     console.error("Supabase failed, using fallback:", e);
@@ -127,6 +144,10 @@ export async function getHHITop30(): Promise<HHIOrganismo[]> {
     const supabase = await createClient();
     const { data, error } = await supabase.rpc("hhi_top30");
     if (error) throw error;
+    if (!data || (Array.isArray(data) && data.length === 0)) {
+      console.warn("hhi_top30 RPC returned null/empty, using fallback");
+      return getHHITop30Fallback();
+    }
     return data as HHIOrganismo[];
   } catch (e) {
     console.error("Supabase failed, using fallback:", e);
