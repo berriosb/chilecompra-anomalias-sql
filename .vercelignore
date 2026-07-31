@@ -1,0 +1,13 @@
+data/
+*.parquet
+*.db
+*.csv
+*.gz
+*.tar.gz
+node_modules/
+.next/
+dashboard/node_modules/
+dashboard/.next/
+.git/
+.stitch-review/
+src/legacy/
