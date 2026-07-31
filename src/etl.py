@@ -49,6 +49,13 @@ COLUMNS_PARTIES = [
 ]
 
 
+def clean_awards(df_awards: pd.DataFrame) -> pd.DataFrame:
+    """Normaliza IDs y conserva solamente órdenes con monto positivo."""
+    cleaned = df_awards.rename(columns={"id": "oc_id"})
+    valid_amount = cleaned["value_amount"].notna() & (cleaned["value_amount"] > 0)
+    return cleaned.loc[valid_amount].copy()
+
+
 def process_year(year: int, raw_dir: Path, chunk_size: int = 200_000) -> pd.DataFrame:
     """
     Carga y une los CSVs de un año, devolviendo tabla plana por OC.
@@ -73,9 +80,7 @@ def process_year(year: int, raw_dir: Path, chunk_size: int = 200_000) -> pd.Data
             "main_ocid": "string",
         },
     )
-    df_awards = df_awards.rename(columns={"id": "oc_id"})
-    # Filtrar OC con monto inválido AHORA (reduce memoria)
-    df_awards = df_awards[df_awards["value_amount"].notna() & (df_awards["value_amount"] > 0)]
+    df_awards = clean_awards(df_awards)
     print(f"         {len(df_awards):,} OC válidas")
 
     # 2. Cargar main (procesos)
