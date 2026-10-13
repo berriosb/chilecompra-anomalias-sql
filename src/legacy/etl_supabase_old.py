@@ -59,7 +59,7 @@ def upload_chunk(rows: list[dict], table: str = "ordenes_compra"):
 
 
 def main():
-    parquet_path = Path("/home/bastian-berrios/Proyectos/chilecompra-anomalias-sql/data/chilecompra_combined.parquet")
+    parquet_path = Path(__file__).resolve().parents[2] / "data" / "chilecompra_combined.parquet"
     if not parquet_path.exists():
         print(f"ERROR: {parquet_path} no existe", file=sys.stderr)
         sys.exit(1)

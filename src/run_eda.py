@@ -6,8 +6,9 @@ import sqlite3
 import json
 from pathlib import Path
 
-DATA = Path('/home/bastian-berrios/Proyectos/chilecompra-anomalias-sql/data')
-REPORTS = Path('/home/bastian-berrios/Proyectos/chilecompra-anomalias-sql/reports')
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DATA = PROJECT_ROOT / 'data'
+REPORTS = PROJECT_ROOT / 'reports'
 REPORTS.mkdir(parents=True, exist_ok=True)
 
 conn = sqlite3.connect(DATA / 'chilecompra.db')

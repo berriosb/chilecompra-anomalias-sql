@@ -16,7 +16,8 @@ from pathlib import Path
 
 import pandas as pd
 
-DATA = Path('/home/bastian-berrios/Proyectos/chilecompra-anomalias-sql/data')
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DATA = PROJECT_ROOT / 'data'
 PARQUET = DATA / 'chilecompra_combined.parquet'
 DB_FILE = DATA / 'chilecompra.db'
 
