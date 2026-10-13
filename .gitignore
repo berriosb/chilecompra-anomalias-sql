@@ -47,3 +47,9 @@ dashboard/.next/
 .vercel
 dashboard/tsconfig.tsbuildinfo
 .env*
+
+# Engram memory project marker
+.engram/
+
+# Supabase CLI — estado local del proyecto (project-ref, pooler-url, versiones)
+supabase/.temp/
