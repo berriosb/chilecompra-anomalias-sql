@@ -2,9 +2,9 @@
 # Python 3.11+
 
 # Core data
-pandas>=2.2.0
-numpy>=1.26.0
-pyarrow>=15.0.0          # Para Parquet (más eficiente que CSV)
+pandas>=3.1.0
+numpy>=2.5.4
+pyarrow>=26.0.0          # Para Parquet (más eficiente que CSV)
 
 # Database
 supabase>=2.5.0
