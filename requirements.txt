@@ -18,13 +18,13 @@ seaborn>=0.13.0
 plotly>=5.18.0
 
 # HTTP / downloads
-requests>=2.31.0
-tqdm>=4.66.0              # Progress bars para descargas grandes
+requests>=2.34.2
+tqdm>=4.70.1              # Progress bars para descargas grandes
 
 # Jupyter
-jupyter>=1.0.0
-ipykernel>=6.29.0
+jupyter>=1.1.1
+ipykernel>=7.4.0
 
 # Utilities
-rich>=13.7.0              # Pretty printing
+rich>=15.0.0              # Pretty printing
 python-dateutil>=2.8.2
