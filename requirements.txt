@@ -13,9 +13,9 @@ sqlalchemy>=2.0.25       # ORM
 python-dotenv>=1.0.0      # .env management
 
 # Visualization
-matplotlib>=3.8.0
-seaborn>=0.13.0
-plotly>=5.18.0
+matplotlib>=3.11.2
+seaborn>=0.13.2
+plotly>=7.1.0
 
 # HTTP / downloads
 requests>=2.31.0
