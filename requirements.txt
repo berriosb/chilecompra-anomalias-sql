@@ -7,10 +7,10 @@ numpy>=1.26.0
 pyarrow>=15.0.0          # Para Parquet (más eficiente que CSV)
 
 # Database
-supabase>=2.5.0
-psycopg2-binary>=2.9.9    # PostgreSQL driver
-sqlalchemy>=2.0.25       # ORM
-python-dotenv>=1.0.0      # .env management
+supabase>=2.33.0
+psycopg2-binary>=2.9.13    # PostgreSQL driver
+sqlalchemy>=2.1.6       # ORM
+python-dotenv>=1.2.4      # .env management
 
 # Visualization
 matplotlib>=3.8.0
